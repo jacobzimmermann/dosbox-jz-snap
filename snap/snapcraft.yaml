@@ -1,0 +1,54 @@
+name: dosbox-jz
+version: '0.74-3'
+summary: Open Source PC/MS-DOS emulator
+description: |
+  DOSBox is a DOS-emulator that uses the SDL-library which 
+  makes DOSBox very easy to port to different platforms. DOSBox has 
+  already been ported to many different platforms, such as Windows, BeOS, 
+  Linux, MacOS X...
+  
+  DOSBox also emulates CPU:286/386 realmode/protected mode, 
+  Directory FileSystem/XMS/EMS, Tandy/Hercules/CGA/EGA/VGA/VESA graphics, 
+  a SoundBlaster/Gravis Ultra Sound card for excellent sound compatibility 
+  with older games...
+  
+  You can "re-live" the good old days with the help of DOSBox, it 
+  can run plenty of the old classics that don't run on your new computer!  
+  
+  DOSBox is totally free of charge and OpenSource.
+
+grade: stable
+confinement: strict
+
+apps:
+  dosbox:
+    command: dosbox
+    plugs: [home, pulseaudio, unity7]
+
+parts:
+  dosbox:
+    plugin: autotools
+    source: https://downloads.sourceforge.net/project/dosbox/dosbox/0.74/dosbox-0.74.tar.gz
+    build-packages:
+      - libsdl-net1.2-dev
+      - libsdl-sound1.2-dev
+      - libasound2-dev
+    stage-packages:
+      - libsdl-net1.2
+      - libsdl-sound1.2
+      - libasound2
+    prepare: |
+      for p in $SNAPCRAFT_STAGE/../ubuntu-patches/*.patch
+      do
+        echo Applying $p
+        cat $p | patch -p1 
+      done
+    install: |
+      echo Stripping
+      strip $SNAPCRAFT_PART_INSTALL/bin/* 2>/dev/null || /bin/true
+    prime:
+      - -share
+      - -usr/share/doc
+      - -usr/share/lintian
+      - -usr/share/man
+
