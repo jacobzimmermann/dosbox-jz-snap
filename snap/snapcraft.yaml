@@ -37,13 +37,14 @@ parts:
       - libsdl-net1.2
       - libsdl-sound1.2
       - libasound2
-    prepare: |
+    override-build: |
+      echo HUJER $PWD
       for p in $SNAPCRAFT_STAGE/../ubuntu-patches/*.patch
       do
         echo Applying $p
         cat $p | patch -p1 
       done
-    install: |
+      snapcraftctl build
       echo Stripping
       strip $SNAPCRAFT_PART_INSTALL/bin/* 2>/dev/null || /bin/true
     prime:
