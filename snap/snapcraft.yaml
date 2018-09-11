@@ -37,8 +37,8 @@ parts:
       - libsdl-net1.2
       - libsdl-sound1.2
       - libasound2
+      - libpulse0
     override-build: |
-      echo HUJER $PWD
       for p in $SNAPCRAFT_STAGE/../ubuntu-patches/*.patch
       do
         echo Applying $p
