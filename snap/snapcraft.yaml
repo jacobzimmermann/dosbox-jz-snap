@@ -38,6 +38,9 @@ parts:
       - libsdl-sound1.2
       - libasound2
       - libpulse0
+    organize:
+      usr/lib/*/libpulse.so.*: usr/lib/
+      usr/lib/*/pulseaudio/libpulsecommon*: usr/lib/
     override-build: |
       for p in $SNAPCRAFT_STAGE/../ubuntu-patches/*.patch
       do
