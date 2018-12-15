@@ -19,11 +19,34 @@ description: |
 
 grade: stable
 confinement: strict
+base: core18
+
+plugs:
+    gnome-3-28-1804:
+      interface: content
+      target: $SNAP/gnome-platform
+      default-provider: gnome-3-28-1804
+    gtk-3-themes:
+      interface: content
+      target: $SNAP/data-dir/themes
+      default-provider: gtk-common-themes
+    icon-themes:
+      interface: content
+      target: $SNAP/data-dir/icons
+      default-provider: gtk-common-themes
+    sound-themes:
+      interface: content
+      target: $SNAP/data-dir/sounds
+      default-provider: gtk-common-themes
+
+environment:
+  XDG_DATA_DIRS: $SNAP/data-dir:$XDG_DATA_DIRS
+  GSETTINGS_SCHEMA_DIR: $SNAP/share/glib-2.0/schemas
 
 apps:
   dosbox:
-    command: dosbox
-    plugs: [home, pulseaudio, unity7]
+    command: desktop-launch dosbox
+    plugs: [home, pulseaudio, desktop, desktop-legacy, wayland, x11, opengl]
 
 parts:
   dosbox:
@@ -37,7 +60,7 @@ parts:
       - libsdl-net1.2
       - libsdl-sound1.2
       - libasound2
-      - libpulse0
+      - libslang2
     organize:
       usr/lib/*/libpulse.so.*: usr/lib/
       usr/lib/*/pulseaudio/libpulsecommon*: usr/lib/
@@ -56,3 +79,20 @@ parts:
       - -usr/share/lintian
       - -usr/share/man
 
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      - libgtk-3-dev
+    override-build: |
+      snapcraftctl build
+      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
+
+  # workaround snapcraft trying to outsmart us by copying ldd listed libraries
+  workaround:
+    plugin: nil
+    prime:
+      - "-*"
