@@ -1,5 +1,5 @@
 name: dosbox-jz
-version: '0.74-2'
+version: '0.74-3'
 summary: Open Source PC/MS-DOS emulator
 description: |
   DOSBox is a DOS-emulator that uses the SDL-library which 
@@ -51,7 +51,7 @@ apps:
 parts:
   dosbox:
     plugin: autotools
-    source: https://sourceforge.net/projects/dosbox/files/dosbox/0.74-2/dosbox-0.74-2.tar.gz
+    source: https://sourceforge.net/projects/dosbox/files/dosbox/0.74-3/dosbox-0.74-3.tar.gz
     build-packages:
       - libsdl-net1.2-dev
       - libsdl-sound1.2-dev
